@@ -1,0 +1,35 @@
+version: '3.5'
+
+services:
+  backend:
+    build: backend/
+    ports:
+      - "8080:8080"
+    depends_on: # ignored when deploying a stack in swarm mode or kubernetes
+      - mysql
+    # restart: always # ignored when deploying a stack in swarm mode or kubernetes
+    environment:
+      PORT: 8080
+      DATABASE_URL: mysql
+      DATABASE_PORT: 3306
+      DATABASE_USERNAME: root
+      DATABASE_PASSWORD: CzmRkxmRrpBHOv92k8uRSvUBMGjsZ5zpZ53xk5jpZ08
+      DATABASE_NAME: base
+
+  mysql:
+    image: library/mysql:5.6
+    ports:
+      - "3306:3306"
+    volumes:
+      - db-data-mysql-1:/var/lib/mysql
+    # restart: always # ignored when deploying a stack in swarm mode or kubernetes
+    environment:
+      MYSQL_ROOT_PASSWORD: CzmRkxmRrpBHOv92k8uRSvUBMGjsZ5zpZ53xk5jpZ08
+
+# Need to run `yarn db:setup && yarn db:seed` in the host machine
+# To create the very first user
+# Otherwise without the first user, you can't do much
+
+volumes:
+  db-data-mysql-1:
+
