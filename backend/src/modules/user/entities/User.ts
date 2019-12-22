@@ -1,10 +1,4 @@
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm'
+import { Column, CreateDateColumn, Entity, UpdateDateColumn } from 'typeorm'
 import { UserRoleEnum } from '../../auth/types/user-role.enum'
 
 @Entity()

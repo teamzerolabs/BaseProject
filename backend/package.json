@@ -37,7 +37,7 @@
     "lodash": "^4.17.15",
     "moment": "2.24.0",
     "morgan": "1.9.1",
-    "mysql": "^2.17.1",
+    "mysql2": "^2.0.2",
     "nest-router": "^1.0.9",
     "node-excel-export": "^1.4.4",
     "nodemailer": "^6.3.0",

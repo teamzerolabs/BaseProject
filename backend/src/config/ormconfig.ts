@@ -15,9 +15,9 @@ const options = {
   cli: {
     migrationsDir: 'src/migrations',
   },
-  extra: {
-    max: 32,
-  },
+  // extra: {
+  //   max: 32,
+  // },
   options: {
     encrypt: true,
   },

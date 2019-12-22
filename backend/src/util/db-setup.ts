@@ -31,7 +31,7 @@ export async function createDatabaseIfNotExists(
     const connection = await createConnection({
       type: 'mysql',
       ...config.mysql,
-      database: 'mysql',
+      database: '',
     } as MysqlConnectionOptions)
 
     const queryRunner = connection.createQueryRunner()

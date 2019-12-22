@@ -32,6 +32,8 @@ export class AuthGuard implements CanActivate {
     const accessToken = AuthGuard.getAccessToken(request)
     if (accessToken) {
       try {
+        await this.authService.verify(accessToken)
+
         const decoded = this.authService.decode(accessToken, { json: true })
         if (decoded) {
           request.auth = decoded

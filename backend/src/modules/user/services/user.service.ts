@@ -5,11 +5,11 @@ import { addContext } from '../../../errors/error-types'
 import { NotFoundException } from '../../../errors/NotFoundException'
 import { UserRoleEnum } from '../../auth/types/user-role.enum'
 import { User } from '../entities/User'
-import { UserRepository } from '../repo/user.repo'
+import { UserRepo } from '../repo/user.repo'
 
 @Injectable()
 export class UserService {
-  constructor(private readonly userRepository: UserRepository) {}
+  constructor(private readonly userRepository: UserRepo) {}
 
   /**
    * Gets a user by id
@@ -65,24 +65,13 @@ export class UserService {
     )
 
     return this.userRepository
-      .save({
+      .createUser({
         username,
         emailAddress,
-        password: hashedPassword,
+        hashedPassword,
         fullName,
         role,
       })
       .catch(addContext(`error saving new user entity`))
-  }
-
-  @Transactional()
-  async updateUserRole(data: {
-    id: number
-    roleName: UserRoleEnum
-  }): Promise<User> {
-    const { id, roleName } = data
-    await this.userRepository.update(id, { role: roleName })
-
-    return this.getUserById(id)
   }
 }

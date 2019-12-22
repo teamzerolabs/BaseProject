@@ -11,6 +11,10 @@ export class AuthService {
     private readonly userService: UserService
   ) {}
 
+  async verify(token: string, opts?: any) {
+    return this.jwtService.verifyAsync(token, opts)
+  }
+
   decode(token: string, opts?: any) {
     return this.jwtService.decode(token, opts)
   }

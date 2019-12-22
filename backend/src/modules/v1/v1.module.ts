@@ -14,7 +14,7 @@ import { AuthController } from './controllers/auth/auth.controller'
 import { UserController } from './controllers/user/user.controller'
 
 @Module({
-  imports: [AuthModule, UserModule],
+  imports: [UserModule, AuthModule],
   controllers: [AuthController, UserController],
   providers: [],
 })

@@ -37,7 +37,7 @@ export class UserController {
 
   @Get('/:userId')
   async getUserById(
-    @Param('userId', new ParseIntPipe()) userId: number,
+    @Param('userId', ParseIntPipe) userId: number,
     @CurrentUserRole() role: UserRoleEnum,
     @CurrentUserId() currentUserId: number
   ): Promise<UserResponse> {
@@ -72,7 +72,7 @@ export class UserController {
 
       ability.throwUnlessCan(Action.Create, User)
 
-      return await this.userService.createUser(req)
+      return this.userService.createUser(req)
     } catch (e) {
       throw new InternalException('error creating user', e)
     }
