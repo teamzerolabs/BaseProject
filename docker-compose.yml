@@ -1,0 +1,39 @@
+version: '3.5'
+
+services:
+  backend:
+    build: backend/
+    ports:
+      - "8080:8080"
+      - "9101:9101"
+    depends_on: # ignored when deploying a stack in swarm mode or kubernetes
+      - mysql
+
+    # Environment variables below for development purposes only. DO NOT check in any real passwords.
+    environment:
+      PORT: 8080
+      BASE_URL: http://localhost:3000
+      DATABASE_URL: mysql
+      DATABASE_PORT: 3306
+      DATABASE_USERNAME: root
+      DATABASE_PASSWORD: myfakepassword
+      DATABASE_NAME: base
+
+  mysql:
+    image: library/mysql:5.6
+    ports:
+      - "3306:3306"
+    volumes:
+      - db-data-mysql-1:/var/lib/mysql
+
+    # Environment variables below for development purposes only. DO NOT check in any real passwords.
+    environment:
+      MYSQL_ROOT_PASSWORD: myfakepassword
+
+# Need to run `yarn db:setup && yarn db:seed` in the host machine
+# To create the very first user
+# Otherwise without the first user, you can't do much
+
+volumes:
+  db-data-mysql-1:
+

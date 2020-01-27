@@ -1,0 +1,16 @@
+{
+  "AWSEBDockerrunVersion": "1",
+  "Image": {
+    "Name": "520551470562.dkr.ecr.us-west-2.amazonaws.com/staging/baseproject:latest",
+    "Update": "true"
+  },
+  "Ports": [
+    {
+      "ContainerPort": 8080
+    },
+    {
+      "ContainerPort": 9101,
+      "HostPort": 9101
+    }
+  ]
+}

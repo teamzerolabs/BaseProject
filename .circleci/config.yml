@@ -1,0 +1,78 @@
+version: 2
+jobs:
+
+  build-and-test:
+  #This job is a quick sanity check that the project builds before
+    docker:
+      - image: circleci/node:10
+    steps:
+      - checkout
+      - run:
+          name: Yarn and Test
+          command: |
+            pushd backend
+            yarn
+  build-image-push-deploy:
+    docker:
+      - image: circleci/node:10
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Install dependencies
+          command: |
+            sudo apt-get -y -qq update
+            sudo apt-get install python3-pip awscli build-essential
+            pip3 install awscli --upgrade --user
+      - run:
+          name: Set Image Tag
+          command: |
+            COMMIT_HASH=`echo $CIRCLE_SHA1 | cut -c -8`
+            IMAGE_TAG="${CIRCLE_BRANCH}-${COMMIT_HASH}"
+            echo "export IMAGE_TAG=\"${CIRCLE_BRANCH}-${COMMIT_HASH}\"" >> $BASH_ENV
+      - run:
+          name: Login to ECR
+          command: |
+            eval $(aws ecr get-login --region us-west-2 --no-include-email)
+      - run:
+          name: Build Backend and Push to ECR Staging
+          command: |
+            pushd backend
+            docker build -t staging/baseproject .
+            docker tag staging/baseproject ${AWS_ACCOUNT_ID}.dkr.ecr.us-west-2.amazonaws.com/staging/baseproject:$IMAGE_TAG
+            docker push ${AWS_ACCOUNT_ID}.dkr.ecr.us-west-2.amazonaws.com/staging/baseproject:$IMAGE_TAG
+            docker tag staging/baseproject ${AWS_ACCOUNT_ID}.dkr.ecr.us-west-2.amazonaws.com/staging/baseproject:latest
+            docker push ${AWS_ACCOUNT_ID}.dkr.ecr.us-west-2.amazonaws.com/staging/baseproject:latest
+      - run:
+          name: Prepare to deploy to Elastic Beanstalk
+          command: |
+            mkdir ~/.aws
+            touch ~/.aws/config
+            chmod 600 ~/.aws/config
+            echo "[profile eb-cli]" > ~/.aws/config
+            echo "aws_access_key_id=$AWS_ACCESS_KEY_ID" >> ~/.aws/config
+            echo "aws_secret_access_key=$AWS_SECRET_ACCESS_KEY" >> ~/.aws/config
+      - run:
+          name: Deploy
+          command: |
+            git clone https://github.com/aws/aws-elastic-beanstalk-cli-setup.git
+            ./aws-elastic-beanstalk-cli-setup/scripts/bundled_installer
+            echo 'export PATH="/home/circleci/.ebcli-virtual-env/executables:$PATH"' >> ~/.bash_profile && source ~/.bash_profile
+            pushd backend
+            pushd aws_eb
+            echo "    DATABASE_URL: $DATABASE_URL" >> .ebextensions/env.config
+            echo "    DATABASE_PORT: $DATABASE_PORT" >> .ebextensions/env.config
+            echo "    DATABASE_USERNAME: $DATABASE_USERNAME" >> .ebextensions/env.config
+            echo "    DATABASE_PASSWORD: $DATABASE_PASSWORD" >> .ebextensions/env.config
+            echo "    DATABASE_NAME: $DATABASE_NAME" >> .ebextensions/env.config
+            eb deploy
+
+workflows:
+  version: 2
+
+  build_and_test:
+    jobs:
+      - build-and-test
+      - build-image-push-deploy:
+          requires:
+            - build-and-test
