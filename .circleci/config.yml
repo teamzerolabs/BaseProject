@@ -30,6 +30,7 @@ jobs:
             COMMIT_HASH=`echo $CIRCLE_SHA1 | cut -c -8`
             IMAGE_TAG="${CIRCLE_BRANCH}-${COMMIT_HASH}"
             echo "export IMAGE_TAG=\"${CIRCLE_BRANCH}-${COMMIT_HASH}\"" >> $BASH_ENV
+      # you will need to set the proper ECR region depending on where your ECR is
       - run:
           name: Login to ECR
           command: |
@@ -52,6 +53,7 @@ jobs:
             echo "[profile eb-cli]" > ~/.aws/config
             echo "aws_access_key_id=$AWS_ACCESS_KEY_ID" >> ~/.aws/config
             echo "aws_secret_access_key=$AWS_SECRET_ACCESS_KEY" >> ~/.aws/config
+      # This next step could be cleaned up, or build custom image. eb-cli takes too long to install.
       - run:
           name: Deploy
           command: |
@@ -76,3 +78,6 @@ workflows:
       - build-image-push-deploy:
           requires:
             - build-and-test
+          filters:
+            branches:
+              only: master

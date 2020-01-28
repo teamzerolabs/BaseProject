@@ -1,0 +1,110 @@
+//Example Policy from https://medium.com/engineering-on-the-incline/continuous-integration-with-circleci-2-0-github-and-elastic-beanstalk-cf1a0b7f05c6, not tested
+
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Action": [
+                "elasticbeanstalk:CreateApplicationVersion",
+                "elasticbeanstalk:DescribeEnvironments",
+                "elasticbeanstalk:DeleteApplicationVersion",
+                "elasticbeanstalk:UpdateEnvironment",
+                "elasticbeanstalk:CreateStorageLocation"
+            ],
+            "Effect": "Allow",
+            "Resource": "*"
+        },
+        {
+            "Action": [
+                "sns:CreateTopic",
+                "sns:GetTopicAttributes",
+                "sns:ListSubscriptionsByTopic",
+                "sns:Subscribe"
+            ],
+            "Effect": "Allow",
+            "Resource": "arn:aws:sns:YOUR_REGION:YOUR_ACCOUNT_ID:*"
+        },
+        {
+            "Action": [
+                "autoscaling:SuspendProcesses",
+                "autoscaling:DescribeScalingActivities",
+                "autoscaling:ResumeProcesses",
+                "autoscaling:DescribeAutoScalingGroups",
+                "autoscaling:UpdateAutoScalingGroup",
+                "autoscaling:DescribeLaunchConfigurations"
+            ],
+            "Effect": "Allow",
+            "Resource": "*"
+        },
+        {
+            "Action": [
+                "cloudformation:GetTemplate",
+                "cloudformation:DescribeStacks",
+                "cloudformation:CreateStack",
+                "cloudformation:CancelUpdateStack",
+                "cloudformation:ListStackResources",
+                "cloudformation:DescribeStackResource",
+                "cloudformation:DescribeStackResources",
+                "cloudformation:DescribeStackEvents",
+                "cloudformation:DeleteStack",
+                "cloudformation:UpdateStack"
+            ],
+            "Effect": "Allow",
+            "Resource": "arn:aws:cloudformation:YOUR_REGION:YOUR_ACCOUNT_ID:*"
+        },
+        {
+            "Action": [
+                "ec2:DescribeImages",
+                "ec2:DescribeKeyPairs",
+                "ec2:describeVpcs",
+                "ec2:*"
+            ],
+            "Effect": "Allow",
+            "Resource": "*"
+        },
+        {
+            "Action": [
+                "s3:PutObject",
+                "s3:PutObjectAcl",
+                "s3:GetObject",
+                "s3:GetObjectAcl",
+                "s3:ListBucket",
+                "s3:DeleteObject",
+                "s3:GetBucketPolicy",
+                "s3:Get*",
+                "s3:List*"
+            ],
+            "Effect": "Allow",
+            "Resource": [
+                "arn:aws:s3:::elasticbeanstalk-YOUR_REGION-YOUR_ACCOUNT_ID",
+                "arn:aws:s3:::elasticbeanstalk-YOUR_REGION-YOUR_ACCOUNT_ID/*"
+            ]
+        },
+        {
+            "Action": [
+                "s3:CreateBucket",
+                "s3:GetObject",
+                "s3:ListAllMyBuckets"
+            ],
+            "Effect": "Allow",
+            "Resource": "*"
+        },
+        {
+            "Action": [
+                "elasticloadbalancing:DescribeInstanceHealth",
+                "elasticloadbalancing:DescribeLoadBalancers",
+                "elasticloadbalancing:DeregisterInstancesFromLoadBalancer",
+                "elasticloadbalancing:RegisterInstancesWithLoadBalancer"
+            ],
+            "Effect": "Allow",
+            "Resource": "*"
+        },
+        {
+            "Action": [
+                "autoscaling:DescribeScheduledActions",
+                "autoscaling:TerminateInstanceInAutoScalingGroup"
+            ],
+            "Effect": "Allow",
+            "Resource": "*"
+        }
+}
