@@ -7,6 +7,7 @@ import config from './config'
 import { InternalException } from './errors/error-types'
 import { PrometheusService } from './modules/common/services/prometheus.service'
 import { logger } from './util/logger'
+import { readFileSync } from 'fs'
 
 export async function createApp() {
   const app = await NestFactory.create(AppModule)
@@ -38,6 +39,13 @@ async function bootstrap() {
       null
     )
   }
+
+  // TODO: Move this into
+  const packageJson = JSON.parse(
+    readFileSync('./package.json').toString('utf-8')
+  )
+  // logger.info(`package.json: ${JSON.stringify(packageJson, null, 4)}`)
+  prometheusService.logPackages(packageJson)
 
   process.on('unhandledRejection', (err) => {
     prometheusService.unhandledRejectionLogged()

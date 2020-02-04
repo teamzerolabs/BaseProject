@@ -32,7 +32,7 @@ const config: ConfigProperties = {
     benchmark: parseEnvBoolean('DEBUG_BENCHMARK', false),
   },
   prometheus: {
-    port: parseEnvNumber('PROMETHEUS_PORT', 9101),
+    port: parseEnvNumber('PROMETHEUS_PORT', 9991),
     prefix: parseEnv('PROMETHEUS_PREFIX', 'base'),
   },
   mysql: {
