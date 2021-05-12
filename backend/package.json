@@ -40,7 +40,7 @@
     "mysql2": "^2.0.2",
     "nest-router": "^1.0.9",
     "node-excel-export": "^1.4.4",
-    "nodemailer": "^6.3.0",
+    "nodemailer": "^6.4.16",
     "nodemailer-sendgrid-transport": "^0.2.0",
     "prom-client": "11.2.1",
     "reflect-metadata": "^0.1.12",
